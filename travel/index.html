@@ -5,104 +5,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026 台北桃園五天四夜精緻之旅</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            scroll-behavior: smooth;
         }
-        .hero-pattern {
-            background-color: #2c5282;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234299e1' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        /* 優化摺疊邏輯，確保內容不被截斷 */
+        .accordion-content { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1); 
         }
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        .accordion-active .accordion-content { 
+            max-height: 3000px; /* 增加最大高度確保長文本可見 */
+            transition: max-height 0.5s ease-in;
+        }
+        .accordion-active .chevron { 
+            transform: rotate(180deg); 
+        }
+        /* 增加頁面捲動時的頂部間距，避免被 sticky header 遮擋 */
+        .day-section {
+            scroll-margin-top: 100px;
+        }
+        .map-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #fff1f2;
+            color: #e11d48;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid #fecdd3;
+            transition: all 0.2s;
+        }
+        .map-btn:hover {
+            background-color: #ffe4e6;
+            transform: translateY(-1px);
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900 pb-32">
 
     <!-- Header -->
-    <header class="hero-pattern text-white py-12 px-4 shadow-lg sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-3xl md:text-4xl font-bold mb-2"><i class="fas fa-plane-departure mr-2"></i>2026 台北桃園五天四夜之旅</h1>
-            <p class="text-blue-100 text-lg">2026年1月1日 - 1月5日 | 香港 <i class="fas fa-exchange-alt mx-2"></i> 台北</p>
+    <header class="bg-indigo-900 text-white pt-16 pb-24 px-6 text-center shadow-xl relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+            <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+            <div class="absolute bottom-10 right-10 w-48 h-48 bg-indigo-400 rounded-full blur-3xl"></div>
+        </div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <h1 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">2026 台北桃園五天四夜之旅</h1>
+            <div class="flex flex-wrap items-center justify-center gap-4 text-indigo-100 font-medium">
+                <span class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm">
+                    <i class="far fa-calendar-alt"></i> 1月1日 — 1月5日
+                </span>
+                <span class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm">
+                    <i class="fas fa-map-marker-alt"></i> 桃園 ↔ 台北
+                </span>
+            </div>
         </div>
     </header>
 
-    <div class="max-w-4xl mx-auto px-4 py-8">
-
-        <!-- Info Cards -->
-        <div class="grid md:grid-cols-2 gap-6 mb-8">
-            <!-- Flight Info -->
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
-                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-ticket-alt text-blue-500 mr-2"></i>航班資訊 (國泰航空)</h2>
+    <main class="max-w-4xl mx-auto px-4 -mt-12 relative z-20">
+        
+        <!-- 快速資訊卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+            <!-- 航班資訊 -->
+            <div class="bg-white p-6 rounded-3xl shadow-md border border-slate-100 transition-transform hover:-translate-y-1">
+                <h2 class="flex items-center gap-3 font-bold text-xl text-indigo-800 mb-5">
+                    <i class="fas fa-plane text-indigo-600"></i> 航班資訊 (國泰)
+                </h2>
                 <div class="space-y-3">
-                    <div class="flex justify-between items-center border-b pb-2">
-                        <span class="text-gray-600">去程 (1/1)</span>
-                        <div class="text-right">
-                            <p class="font-bold text-lg">09:05</p>
-                            <p class="text-sm text-gray-500">香港 HKG &rarr; 台北 TPE</p>
-                        </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                        <span class="text-xs font-bold text-slate-500 uppercase">去程 (1/1)</span>
+                        <span class="font-mono font-bold text-indigo-700">09:05 HKG → TPE</span>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">回程 (1/5)</span>
-                        <div class="text-right">
-                            <p class="font-bold text-lg">15:50</p>
-                            <p class="text-sm text-gray-500">台北 TPE &rarr; 香港 HKG</p>
-                        </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                        <span class="text-xs font-bold text-slate-500 uppercase">回程 (1/5)</span>
+                        <span class="font-mono font-bold text-indigo-700">15:50 TPE → HKG</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Hotel Info -->
-            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
-                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-hotel text-purple-500 mr-2"></i>住宿安排</h2>
-                <h3 class="font-bold text-lg mb-1">福容大飯店 桃園機場捷運A8店</h3>
-                <p class="text-sm text-gray-600 mb-3"><i class="fas fa-map-marker-alt mr-1"></i>與捷運 A8 長庚醫院站共構</p>
+            <!-- 住宿安排 -->
+            <div class="bg-white p-6 rounded-3xl shadow-md border border-slate-100 transition-transform hover:-translate-y-1">
+                <h2 class="flex items-center gap-3 font-bold text-xl text-indigo-800 mb-5">
+                    <i class="fas fa-hotel text-indigo-600"></i> 住宿安排
+                </h2>
+                <div class="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 mb-4">
+                    <div class="font-bold text-lg leading-snug text-slate-800">福容大飯店 桃園 A8 店</div>
+                    <div class="text-sm text-indigo-600 font-medium mt-1">機捷 A8 長庚醫院站共構</div>
+                </div>
                 <div class="flex gap-2">
-                    <a href="https://www.fullon-hotels.com.tw/a8/tw/" target="_blank" class="flex-1 bg-purple-100 text-purple-700 text-center py-2 rounded-lg hover:bg-purple-200 transition text-sm font-medium"><i class="fas fa-globe mr-1"></i>官網</a>
-                    <a href="https://goo.gl/maps/YourMapLinkHere" onclick="window.open('https://www.google.com/maps/search/?api=1&query=福容大飯店+桃園機場捷運A8店')" class="flex-1 bg-gray-100 text-gray-700 text-center py-2 rounded-lg hover:bg-gray-200 transition text-sm font-medium"><i class="fas fa-map mr-1"></i>地圖</a>
+                    <a href="https://www.fullon-hotels.com.tw/a8/tw/" target="_blank" class="flex-1 py-2 text-center text-xs font-bold bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors">官方網站</a>
+                    <a href="https://www.google.com/maps/search/?api=1&query=%E7%A6%8F%E5%AE%B9%E5%A4%A7%E9%A3%AF%E5%BA%97+%E6%A1%83%E5%9C%92%E6%A9%9F%E5%A0%B4%E6%8D%B7%E9%81%8BA8%E5%BA%97" target="_blank" class="flex-1 py-2 text-center text-xs font-bold border border-indigo-200 text-indigo-700 rounded-xl hover:bg-indigo-50 transition-colors">Google Map</a>
                 </div>
             </div>
         </div>
 
-        <!-- Itinerary -->
-        <div class="space-y-8">
-
+        <!-- 行程內容 - 預設全部展開 -->
+        <div id="itinerary" class="space-y-6">
+            
             <!-- Day 1 -->
-            <div class="relative">
-                <div class="sticky top-24 z-10 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md inline-block mb-4 font-bold">
-                    Day 1: 1月1日 (四) 抵達與入住
-                </div>
-                <div class="bg-white rounded-xl shadow-sm p-6 ml-4 relative card-hover">
-                    <div class="space-y-6">
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">09:05</div>
-                            <div class="flex-1 pb-6 border-b border-gray-100">
-                                <h4 class="text-lg font-bold text-gray-800">抵達台北桃園國際機場 (TPE)</h4>
-                                <p class="text-gray-600 text-sm mt-1">辦理入境手續、領取行李。</p>
+            <div class="accordion-item day-section bg-white rounded-[2rem] shadow-sm border border-slate-100 accordion-active">
+                <button class="w-full flex items-center justify-between p-6 text-left" onclick="toggleAccordion(this)">
+                    <div class="flex items-center gap-5">
+                        <div class="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center">
+                            <span class="text-[10px] font-bold">DAY</span>
+                            <span class="text-2xl font-black leading-none">1</span>
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-indigo-500">1月1日 (四)</div>
+                            <div class="font-bold text-xl text-slate-800">抵達、入住與影城之夜</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-down text-slate-400 chevron transition-transform"></i>
+                </button>
+                <div class="accordion-content px-6 pb-6">
+                    <div class="space-y-8 pt-4 border-t border-slate-50">
+                        <div class="flex gap-6 relative">
+                            <div class="absolute left-3 top-8 bottom-0 w-0.5 bg-indigo-50"></div>
+                            <div class="flex-shrink-0 w-6 flex flex-col items-center">
+                                <span class="text-xs font-black text-indigo-600">09:05</span>
+                                <div class="w-3 h-3 rounded-full bg-indigo-600 mt-2 z-10 shadow-sm"></div>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-slate-800">抵達桃園國際機場 (TPE)</h4>
+                                <p class="text-sm text-slate-600 mt-1">辦理入境、領取行李。</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=%E6%A1%83%E5%9C%92%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4" target="_blank" class="map-btn mt-2">
+                                    <i class="fas fa-map-marker-alt"></i> 機場位置
+                                </a>
                             </div>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">10:30</div>
-                            <div class="flex-1 pb-6 border-b border-gray-100">
-                                <h4 class="text-lg font-bold text-gray-800">前往飯店</h4>
-                                <div class="bg-blue-50 p-3 rounded-lg mt-2 text-sm">
-                                    <p class="font-bold text-blue-800"><i class="fas fa-subway mr-2"></i>交通方式</p>
-                                    <p>搭乘 <strong>桃園機場捷運</strong>：A12 機場站 &rarr; <span class="text-red-600 font-bold">A8 長庚醫院站</span>。</p>
-                                    <p>直達車或普通車皆可。時間約 15-20 分鐘。</p>
+                        <div class="flex gap-6 relative">
+                            <div class="absolute left-3 top-8 bottom-0 w-0.5 bg-indigo-50"></div>
+                            <div class="flex-shrink-0 w-6 flex flex-col items-center">
+                                <span class="text-xs font-black text-indigo-600">10:30</span>
+                                <div class="w-3 h-3 rounded-full bg-indigo-600 mt-2 z-10 shadow-sm"></div>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-slate-800">前往飯店 (A8)</h4>
+                                <p class="text-sm text-slate-600 mt-1">搭乘桃園機場捷運：A12 機場站 → A8 長庚醫院站。</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=%E7%A6%8F%E5%AE%B9%E5%A4%A7%E9%A3%AF%E5%BA%97+%E6%A1%83%E5%9C%92%E6%A9%9F%E5%A0%B4%E6%8D%B7%E9%81%8BA8%E5%BA%97" target="_blank" class="map-btn mt-2">
+                                    <i class="fas fa-map-marker-alt"></i> 飯店位置
+                                </a>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 relative">
+                            <div class="flex-shrink-0 w-6 flex flex-col items-center">
+                                <span class="text-xs font-black text-indigo-600">19:25</span>
+                                <div class="w-3 h-3 rounded-full bg-rose-500 mt-2 z-10 shadow-sm border-2 border-white"></div>
+                            </div>
+                            <div class="flex-grow">
+                                <h4 class="font-bold text-slate-800">南港影城 (喜樂時代)</h4>
+                                <p class="text-sm text-slate-600 mt-1">交通：A8 飯店搭機捷至 A1 台北車站，轉捷運板南線至南港站。</p>
+                                <div class="flex gap-2 mt-3">
+                                    <a href="https://www.centuryasia.com.tw/" target="_blank" class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-lg font-bold">訂票連結</a>
+                                    <a href="https://www.google.com/maps/search/?api=1&query=%E5%96%9C%E6%A8%82%E6%99%82%E4%BB%A3%E5%BD%B1%E5%9F%8E+%E5%8D%97%E6%B8%AF%E5%BA%97" target="_blank" class="map-btn">
+                                        <i class="fas fa-map-marker-alt"></i> 影城位置
+                                    </a>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">11:30</div>
-                            <div class="flex-1">
-                                <h4 class="text-lg font-bold text-gray-800">Check-in / 午餐</h4>
-                                <p class="text-gray-600 text-sm mt-1">寄放行李後，於飯店樓下 <strong>Global Mall 環球購物中心</strong> 享用午餐。</p>
                             </div>
                         </div>
                     </div>
@@ -110,210 +175,214 @@
             </div>
 
             <!-- Day 2 -->
-            <div class="relative">
-                <div class="sticky top-24 z-10 bg-teal-600 text-white px-4 py-2 rounded-lg shadow-md inline-block mb-4 font-bold">
-                    Day 2: 1月2日 (五) 青埔 Xpark 水族館一日遊
-                </div>
-                <div class="bg-white rounded-xl shadow-sm p-6 ml-4 relative card-hover">
-                    <div class="space-y-6">
-                        <div class="bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
-                            <h5 class="font-bold text-gray-700 mb-2"><i class="fas fa-bus mr-2"></i>今日交通</h5>
-                            <p class="text-sm">機捷 A8 長庚醫院站 &harr; <strong>A18 高鐵桃園站</strong> (約 20 分鐘)。</p>
+            <div class="accordion-item day-section bg-white rounded-[2rem] shadow-sm border border-slate-100 accordion-active">
+                <button class="w-full flex items-center justify-between p-6 text-left" onclick="toggleAccordion(this)">
+                    <div class="flex items-center gap-5">
+                        <div class="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center">
+                            <span class="text-[10px] font-bold">DAY</span>
+                            <span class="text-2xl font-black leading-none">2</span>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">10:00</div>
-                            <div class="flex-1 pb-6 border-b border-gray-100">
-                                <h4 class="text-lg font-bold text-gray-800">Xpark 水族館</h4>
-                                <p class="text-gray-600 text-sm mt-1">必看「福爾摩沙」大水槽與水母區。</p>
-                                <div class="flex flex-wrap gap-2 mt-3">
-                                    <a href="https://www.xpark.com.tw/" target="_blank" class="px-3 py-1 bg-teal-100 text-teal-700 rounded text-xs hover:bg-teal-200">Xpark 官網</a>
-                                    <a href="https://www.google.com/maps/search/?api=1&query=Xpark+Taoyuan" target="_blank" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200">Google Map</a>
-                                </div>
+                        <div>
+                            <div class="text-sm font-bold text-indigo-500">1月2日 (五)</div>
+                            <div class="font-bold text-xl text-slate-800">青埔 Xpark 水族館一日遊</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-down text-slate-400 chevron transition-transform"></i>
+                </button>
+                <div class="accordion-content px-6 pb-6">
+                    <div class="space-y-6 pt-4 border-t border-slate-50">
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-indigo-700 flex items-center gap-2 mb-2">
+                                <i class="fas fa-fish"></i> 10:00 Xpark 水族館
+                            </h4>
+                            <p class="text-sm text-slate-600">重點：福爾摩沙大水槽、癒見水母。交通：機捷 A8 → A18。</p>
+                            <div class="flex gap-2 mt-3">
+                                <a href="https://www.xpark.com.tw/" target="_blank" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg font-bold">官網預約</a>
+                                <a href="https://www.google.com/maps/search/?api=1&query=Xpark+Taoyuan" target="_blank" class="map-btn">
+                                    <i class="fas fa-map-marker-alt"></i> 地圖
+                                </a>
                             </div>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">13:00</div>
-                            <div class="flex-1">
-                                <h4 class="text-lg font-bold text-gray-800">午餐 & 華泰名品城 Outlet</h4>
-                                <p class="text-gray-600 text-sm mt-1">逛美式露天 Outlet 並享用晚餐，隨後搭捷運回飯店。</p>
-                            </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-indigo-700 flex items-center gap-2 mb-2">
+                                <i class="fas fa-shopping-bag"></i> 13:00 華泰名品城 Outlet
+                            </h4>
+                            <p class="text-sm text-slate-600">美式露天商場，適合悠閒午餐與購物。</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=%E8%8F%AF%E6%B3%B0%E5%90%8D%E5%93%81%E5%9F%8E" target="_blank" class="map-btn mt-3">
+                                <i class="fas fa-map-marker-alt"></i> 地圖
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Day 3 -->
-            <div class="relative">
-                <div class="sticky top-24 z-10 bg-red-600 text-white px-4 py-2 rounded-lg shadow-md inline-block mb-4 font-bold">
-                    Day 3: 1月3日 (六) 台北市區與 101 饗宴
-                </div>
-                <div class="bg-white rounded-xl shadow-sm p-6 ml-4 relative card-hover">
-                    <div class="bg-gray-50 p-4 rounded-lg mb-4 border border-gray-200">
-                        <h5 class="font-bold text-gray-700 mb-2"><i class="fas fa-subway mr-2"></i>今日交通</h5>
-                        <p class="text-sm">機捷 A8 &rarr; <strong>A1 台北車站</strong>，轉乘台北捷運 (MRT)。</p>
-                    </div>
-                    <div class="space-y-6">
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">10:00</div>
-                            <div class="flex-1 pb-6 border-b border-gray-100">
-                                <h4 class="text-lg font-bold text-gray-800">台北市區觀光</h4>
-                                <p class="text-sm text-gray-600">推薦行程 (二選一)：</p>
-                                <ul class="list-disc ml-4 text-sm text-gray-600 mt-2 space-y-1">
-                                    <li><strong>文創路線：</strong>搭捷運藍線至「忠孝新生站」，步行至 <strong>華山1914文創園區</strong>。這裡有許多展覽、文創商店及特色咖啡廳。</li>
-                                    <li><strong>繁華信義：</strong>搭捷運紅線至「台北101/世貿站」，漫步 <strong>信義商圈</strong>。</li>
-                                </ul>
-                                <div class="flex flex-wrap gap-2 mt-3">
-                                    <a href="https://www.huashan1914.com/" target="_blank" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200">華山1914 官網</a>
-                                </div>
-                            </div>
+            <div class="accordion-item day-section bg-white rounded-[2rem] shadow-sm border border-slate-100 accordion-active">
+                <button class="w-full flex items-center justify-between p-6 text-left" onclick="toggleAccordion(this)">
+                    <div class="flex items-center gap-5">
+                        <div class="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center">
+                            <span class="text-[10px] font-bold">DAY</span>
+                            <span class="text-2xl font-black leading-none">3</span>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">18:00</div>
-                            <div class="flex-1">
-                                <h4 class="text-lg font-bold text-gray-800">晚餐：饗 A Joy (101 86F)</h4>
-                                <p class="text-gray-600 text-sm mt-1">全台最高自助餐，享受頂級海鮮與夜景。</p>
-                                <div class="flex flex-wrap gap-2 mt-3">
-                                    <a href="https://www.ajoy.com.tw/" target="_blank" class="px-3 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700">饗 A Joy 官網</a>
-                                    <a href="https://www.google.com/maps/search/?api=1&query=饗+A+Joy" target="_blank" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200">Google Map</a>
-                                </div>
-                            </div>
+                        <div>
+                            <div class="text-sm font-bold text-indigo-500">1月3日 (六)</div>
+                            <div class="font-bold text-xl text-slate-800">台北市區與 101 饗宴</div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Day 4 (Updated) -->
-            <div class="relative">
-                <div class="sticky top-24 z-10 bg-green-600 text-white px-4 py-2 rounded-lg shadow-md inline-block mb-4 font-bold">
-                    Day 4: 1月4日 (日) 漁港海鮮與桃園文化之旅
-                </div>
-                <div class="bg-white rounded-xl shadow-sm p-6 ml-4 relative card-hover">
-                    <div class="space-y-6">
-                        <!-- Transport Note -->
-                        <div class="bg-green-50 p-4 rounded-lg mb-4 border border-green-200">
-                            <h5 class="font-bold text-green-800 mb-2"><i class="fas fa-taxi mr-2"></i>交通建議</h5>
-                            <p class="text-sm mb-1">本日行程移動距離較長，且漁港大眾運輸較不便，<strong>強烈建議全日使用 Uber 或計程車</strong>。</p>
-                            <p class="text-xs text-gray-600">A8 飯店 &rarr; 竹圍漁港：車資約 NT$350-400 (25分鐘)</p>
-                            <p class="text-xs text-gray-600">竹圍漁港 &rarr; 圖書館：車資約 NT$400-450 (30分鐘)</p>
-                            <p class="text-xs text-gray-600">夜市 &rarr; A8 飯店：車資約 NT$350 (20-25分鐘)</p>
+                    <i class="fas fa-chevron-down text-slate-400 chevron transition-transform"></i>
+                </button>
+                <div class="accordion-content px-6 pb-6">
+                    <div class="space-y-6 pt-4 border-t border-slate-50">
+                        <!-- 加入小杜麵館 -->
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-indigo-700 flex items-center gap-2 mb-2">
+                                <i class="fas fa-utensils"></i> 11:30 小杜麵館 (午餐)
+                            </h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">台北巷弄間的超人氣麵館，推薦品嚐乾拌麵與滷味小菜。</p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=%E5%B0%8F%E6%9D%9C%E9%BA%B5%E9%A4%A8" target="_blank" class="map-btn mt-3">
+                                <i class="fas fa-map-marker-alt"></i> 地圖位置
+                            </a>
                         </div>
 
-                        <!-- Item 1: Fishery Harbor -->
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">11:00</div>
-                            <div class="flex-1 pb-6 border-b border-gray-100">
-                                <h4 class="text-lg font-bold text-gray-800">竹圍漁港 (午餐：海鮮大餐)</h4>
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded border border-blue-200">老饕最愛</span>
-                                </div>
-                                <p class="text-gray-600 text-sm mt-1">北桃園著名的觀光漁港。您可以在一樓購買新鮮魚貨（帝王蟹、龍蝦、生魚片），再到二樓餐廳區請店家代客料理，現買現吃最過癮！</p>
-                                <p class="text-sm text-gray-600 mt-2"><strong>推薦活動：</strong></p>
-                                <ul class="list-disc ml-4 text-sm text-gray-600 space-y-1">
-                                    <li>享用海鮮大餐</li>
-                                    <li>漫步「彩虹橋」欣賞漁港風光</li>
-                                    <li>購買魚鬆、魚丸等伴手禮</li>
-                                </ul>
-                                <div class="flex flex-wrap gap-2 mt-3">
-                                    <a href="https://www.google.com/maps/search/?api=1&query=竹圍漁港" target="_blank" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200">Google Map</a>
-                                </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-2">下午：台北文化漫遊</h4>
+                            <p class="text-sm text-slate-600">推薦：華山1914文創園區 或 信義商圈。</p>
+                            <div class="flex gap-2 mt-3">
+                                <a href="https://www.google.com/maps/search/?api=1&query=%E8%8F%AF%E5%B1%B11914%E6%96%87%E5%89%B5%E5%9C%92%E5%8D%80" target="_blank" class="map-btn">
+                                    <i class="fas fa-map-marker-alt"></i> 華山1914
+                                </a>
+                                <a href="https://www.google.com/maps/search/?api=1&query=%E4%BF%A1%E7%BE%A9%E5%95%86%E5%9C%88" target="_blank" class="map-btn">
+                                    <i class="fas fa-map-marker-alt"></i> 信義商圈
+                                </a>
                             </div>
                         </div>
-
-                        <!-- Item 2: Library -->
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">15:00</div>
-                            <div class="flex-1 pb-6 border-b border-gray-100">
-                                <h4 class="text-lg font-bold text-gray-800">桃園市立圖書館總館 (全台最美圖書館)</h4>
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded border border-green-200">必去新地標</span>
-                                </div>
-                                <p class="text-gray-600 text-sm mt-1">以「生命樹」為概念設計的超美綠建築，結合蔦屋書店 (Tsutaya Bookstore) 與電影院，非常適合拍照與休憩。</p>
-                                <div class="flex flex-wrap gap-2 mt-3">
-                                    <a href="https://www.typl.gov.tw/" target="_blank" class="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700">圖書館官網</a>
-                                    <a href="https://www.google.com/maps/search/?api=1&query=桃園市立圖書館新總館" target="_blank" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200">Google Map</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Item 3: Night Market -->
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">18:00</div>
-                            <div class="flex-1">
-                                <h4 class="text-lg font-bold text-gray-800">桃園觀光夜市</h4>
-                                <p class="text-gray-600 text-sm mt-1">距離圖書館僅 5 分鐘車程 (或步行 15 分鐘)。在地人喜愛的老牌夜市。</p>
-                                <p class="text-sm text-gray-600 mt-2"><strong>必吃推薦：</strong></p>
-                                <ul class="list-disc ml-4 text-sm text-gray-600 space-y-1">
-                                    <li>嘉義順蚵仔煎 (排隊名店)</li>
-                                    <li>黑人鼎邊趖</li>
-                                    <li>吳記排骨酥</li>
-                                </ul>
-                                <p class="text-xs text-gray-500 mt-3"><i class="fas fa-home mr-1"></i>回程：直接從夜市搭 Uber/計程車返回 A8 飯店 (約 20-25 分鐘)。</p>
-                                <div class="flex flex-wrap gap-2 mt-3">
-                                    <a href="https://www.google.com/maps/search/?api=1&query=桃園觀光夜市" target="_blank" class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-xs hover:bg-gray-200">Google Map</a>
-                                </div>
+                        <div class="p-5 bg-indigo-900 text-white rounded-[2rem] shadow-lg">
+                            <h4 class="font-bold text-xl mb-2 flex items-center gap-2">
+                                <i class="fas fa-utensils text-indigo-300"></i> 18:00 饗 A Joy
+                            </h4>
+                            <p class="text-sm text-indigo-100 opacity-90">台北101 86F 頂級自助餐。※ 須提前預約。</p>
+                            <div class="mt-4 flex gap-3">
+                                <a href="https://www.ajoy.com.tw/" target="_blank" class="text-xs bg-white text-indigo-900 px-4 py-2 rounded-xl font-bold">訂位連結</a>
+                                <a href="https://www.google.com/maps/search/?api=1&query=%E9%A5%97+A+Joy" target="_blank" class="text-xs bg-indigo-800 text-white px-4 py-2 rounded-xl border border-indigo-700 flex items-center gap-2">
+                                    <i class="fas fa-map-marker-alt"></i> 地圖位置
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-             <!-- Day 5 -->
-             <div class="relative">
-                <div class="sticky top-24 z-10 bg-gray-700 text-white px-4 py-2 rounded-lg shadow-md inline-block mb-4 font-bold">
-                    Day 5: 1月5日 (一) 賦歸
-                </div>
-                <div class="bg-white rounded-xl shadow-sm p-6 ml-4 relative card-hover">
-                    <div class="space-y-6">
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">11:00</div>
-                            <div class="flex-1 pb-6 border-b border-gray-100">
-                                <h4 class="text-lg font-bold text-gray-800">退房 (Check-out)</h4>
-                                <p class="text-gray-600 text-sm mt-1">整理行李，準備前往機場。</p>
-                            </div>
+            <!-- Day 4 -->
+            <div class="accordion-item day-section bg-white rounded-[2rem] shadow-sm border border-slate-100 accordion-active">
+                <button class="w-full flex items-center justify-between p-6 text-left" onclick="toggleAccordion(this)">
+                    <div class="flex items-center gap-5">
+                        <div class="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center">
+                            <span class="text-[10px] font-bold">DAY</span>
+                            <span class="text-2xl font-black leading-none">4</span>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">12:30</div>
-                            <div class="flex-1 pb-6 border-b border-gray-100">
-                                <h4 class="text-lg font-bold text-gray-800">前往機場</h4>
-                                <p class="text-gray-600 text-sm mt-1">機捷 A8 &rarr; A12/A13 機場站。</p>
-                            </div>
+                        <div>
+                            <div class="text-sm font-bold text-indigo-500">1月4日 (日)</div>
+                            <div class="font-bold text-xl text-slate-800">漁港海鮮與桃園文化</div>
                         </div>
-                         <div class="flex gap-4">
-                            <div class="w-16 text-right font-mono font-bold text-gray-500 pt-1">15:50</div>
-                            <div class="flex-1">
-                                <h4 class="text-lg font-bold text-gray-800">搭機返港</h4>
-                                <p class="text-gray-600 text-sm mt-1">國泰航空 | TPE &rarr; HKG</p>
+                    </div>
+                    <i class="fas fa-chevron-down text-slate-400 chevron transition-transform"></i>
+                </button>
+                <div class="accordion-content px-6 pb-6">
+                    <div class="space-y-6 pt-4 border-t border-slate-50">
+                        <div class="flex items-center gap-3 p-4 bg-amber-50 rounded-2xl border border-amber-100">
+                            <i class="fas fa-taxi text-amber-600"></i>
+                            <p class="text-xs text-amber-800 font-bold">今日強烈建議全程搭乘 Uber。</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-1">11:00 竹圍漁港</h4>
+                                <p class="text-sm text-slate-600">一樓選購海鮮，二樓代客料理。</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=%E7%AB%B9%E5%9C%8D%E6%BC%81%E6%B8%AF" target="_blank" class="map-btn mt-2">
+                                    <i class="fas fa-map-marker-alt"></i> 地圖
+                                </a>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-1">15:00 桃園圖書館總館</h4>
+                                <p class="text-sm text-slate-600">全台最美綠建築，內設蔦屋書店。</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=%E6%A1%83%E5%9C%92%E5%B8%82%E7%AB%8B%E5%9C%96%E6%9B%B8%E9%A4%A8%E6%96%B0%E7%B8%BD%E9%A4%A8" target="_blank" class="map-btn mt-2">
+                                    <i class="fas fa-map-marker-alt"></i> 地圖
+                                </a>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-1">18:00 桃園觀光夜市</h4>
+                                <p class="text-sm text-slate-600">排隊名店：嘉義順蚵仔煎、黑人鼎邊趖。</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=%E6%A1%83%E5%9C%92%E8%A7%80%E5%85%89%E5%A4%9C%E5%B8%82" target="_blank" class="map-btn mt-2">
+                                    <i class="fas fa-map-marker-alt"></i> 地圖
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div>
-
-        <div class="mt-12 bg-white rounded-xl shadow-inner p-6">
-            <h3 class="font-bold text-gray-800 mb-4">💡 旅遊小貼士</h3>
-            <div class="grid md:grid-cols-3 gap-6 text-sm">
-                <div>
-                    <h4 class="font-bold text-blue-600 mb-2">交通APP</h4>
-                    <p class="text-gray-600">在桃園市區移動（如前往圖書館/夜市），建議下載 <strong>Uber</strong> 或 <strong>Find Taxi (呼叫小黃)</strong>，會比等公車方便許多。</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-blue-600 mb-2">天氣 (1月)</h4>
-                    <p class="text-gray-600">台北 1 月平均氣溫約 13-19°C，建議攜帶雨具。</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-blue-600 mb-2">夜市付款</h4>
-                    <p class="text-gray-600">夜市攤販多收現金，請準備足夠的小額新台幣。</p>
+            <!-- Day 5 -->
+            <div class="accordion-item day-section bg-white rounded-[2rem] shadow-sm border border-slate-100 accordion-active">
+                <button class="w-full flex items-center justify-between p-6 text-left" onclick="toggleAccordion(this)">
+                    <div class="flex items-center gap-5">
+                        <div class="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center">
+                            <span class="text-[10px] font-bold">DAY</span>
+                            <span class="text-2xl font-black leading-none">5</span>
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-indigo-500">1月5日 (一)</div>
+                            <div class="font-bold text-xl text-slate-800">賦歸</div>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-down text-slate-400 chevron transition-transform"></i>
+                </button>
+                <div class="accordion-content px-6 pb-6">
+                    <div class="pt-4 border-t border-slate-50">
+                        <div class="flex justify-between items-center bg-indigo-50 p-4 rounded-2xl">
+                            <div>
+                                <p class="text-slate-600 font-medium">12:30 搭機捷往機場</p>
+                                <div class="text-lg font-black text-indigo-900 mt-1">15:50 國泰航空起飛</div>
+                            </div>
+                            <i class="fas fa-plane-departure text-indigo-400 text-3xl"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="text-center mt-8 text-gray-500 text-xs">
-            <p>&copy; 2025 行程規劃助手. All recommended times and prices are estimates.</p>
-        </div>
+        <!-- Tips Section -->
+        <section class="mt-16 bg-amber-50 rounded-[2.5rem] p-10 border border-amber-100 shadow-sm">
+            <h2 class="flex items-center gap-3 font-bold text-2xl text-amber-900 mb-8">
+                <i class="fas fa-lightbulb text-amber-600"></i> 旅人指南
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-sm text-amber-800/90 leading-relaxed font-medium">
+                <div>
+                    <p class="font-bold text-amber-900 mb-2 font-black text-base italic underline">交通安排</p>
+                    <p>桃園景點建議使用 Uber，能省下極多交通時間。台北市區則以捷運為主。</p>
+                </div>
+                <div>
+                    <p class="font-bold text-amber-900 mb-2 font-black text-base italic underline">天氣與支付</p>
+                    <p>1月台北濕涼，請備防風外套。漁港與夜市大多僅收現金，需備妥新台幣。</p>
+                </div>
+                <div>
+                    <p class="font-bold text-amber-900 mb-2 font-black text-base italic underline">重要提醒</p>
+                    <p>饗 A Joy 與 Xpark 皆建議提前線上訂位/購票，避免現場久候或位罄。</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    </div>
+    <footer class="mt-24 text-center text-slate-400 py-12 border-t border-slate-200">
+        <div class="w-12 h-1 bg-indigo-100 mx-auto mb-6 rounded-full"></div>
+        <p class="text-sm font-bold text-slate-500">© 2026 行程規劃助理</p>
+        <p class="text-[10px] mt-2 tracking-widest font-black uppercase text-slate-300 italic">Taipei & Taoyuan 精緻之旅</p>
+    </footer>
 
+    <script>
+        function toggleAccordion(button) {
+            const item = button.parentElement;
+            item.classList.toggle('accordion-active');
+        }
+    </script>
 </body>
 </html>
